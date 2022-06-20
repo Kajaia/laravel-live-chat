@@ -5,15 +5,21 @@ namespace App\Http\Livewire;
 use App\Models\Chat;
 use Livewire\Component;
 use App\Events\ChatEvent;
-use App\Events\ChatCleared;
 
 class ChatComponent extends Component
 {
     public $message;
 
+    protected $rules = ['message' => 'required|max:140'];
+
     public function sendMessage()
     {
-        Chat::create(['message' => $this->message]);
+        $this->validate();
+        
+        Chat::create([
+            'message' => $this->message,
+            'user_id' => auth()->user()->id
+        ]);
 
         $this->reset();
         

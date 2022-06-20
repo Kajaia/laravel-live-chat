@@ -13,7 +13,7 @@ class MessageComponent extends Component
 
     public function removeMessage($id)
     {
-        Chat::findOrFail($id)->delete();
+        Chat::destroy($id);
 
         event(new ChatEvent);
     }
@@ -21,7 +21,9 @@ class MessageComponent extends Component
     public function render()
     {
         return view('livewire.message-component', [
-            'messages' => Chat::all()
+            'messages' => Chat::orderBy('id', 'desc')
+                ->take(5)
+                ->get()
         ]);
     }
 }
